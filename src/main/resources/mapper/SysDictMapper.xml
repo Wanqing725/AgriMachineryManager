@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.agrimachinerymanager.mapper.SysDictMapper">
+    
+    <!-- 根据字典类型查询字典数据 -->
+    <select id="selectByType" resultType="org.agrimachinerymanager.entity.SysDict">
+        SELECT
+            id,
+            type,
+            code,
+            name,
+            sort,
+            remark,
+            create_time AS createTime
+        FROM
+            sys_dict
+        WHERE
+            type = #{type}
+        ORDER BY
+            sort ASC
+    </select>
+    
+    <!-- 根据多个字典类型查询字典数据 -->
+    <select id="selectByTypes" resultType="org.agrimachinerymanager.entity.SysDict">
+        SELECT
+            id,
+            type,
+            code,
+            name,
+            sort,
+            remark,
+            create_time AS createTime
+        FROM
+            sys_dict
+        WHERE
+            type IN
+            <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        ORDER BY
+            type ASC,
+            sort ASC
+    </select>
+    
+    <!-- 根据字典类型和编码查询字典数据 -->
+    <select id="selectByTypeAndCode" resultType="org.agrimachinerymanager.entity.SysDict">
+        SELECT
+            id,
+            type,
+            code,
+            name,
+            sort,
+            remark,
+            create_time AS createTime
+        FROM
+            sys_dict
+        WHERE
+            type = #{type}
+            AND code = #{code}
+    </select>
+</mapper>
