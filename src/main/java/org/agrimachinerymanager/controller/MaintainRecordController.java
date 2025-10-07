@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.agrimachinerymanager.common.result.Result;
+import org.agrimachinerymanager.common.result.ApiResponse;
 import org.agrimachinerymanager.entity.MaintainRecord;
 import org.agrimachinerymanager.service.MaintainRecordService;
 import org.slf4j.Logger;
@@ -36,10 +36,10 @@ public class MaintainRecordController {
      */
     @GetMapping("/getAllMaintainRecords")
     @Operation(summary = "获取所有农机维护记录", description = "查询系统中所有的农机维护记录信息")
-    public Result<List<MaintainRecord>> getAllMaintainRecords() {
+    public ApiResponse<List<MaintainRecord>> getAllMaintainRecords() {
         log.info("获取所有农机维护记录");
         List<MaintainRecord> maintainRecords = maintainRecordService.getAllMaintainRecords();
-        return Result.success(maintainRecords);
+        return ApiResponse.success(maintainRecords);
     }
 
     /**
@@ -49,12 +49,12 @@ public class MaintainRecordController {
      */
     @GetMapping("/getMaintainRecordById/{id}")
     @Operation(summary = "根据ID获取农机维护记录", description = "根据记录ID查询农机维护记录的详细信息")
-    public Result<MaintainRecord> getMaintainRecordById(
+    public ApiResponse<MaintainRecord> getMaintainRecordById(
             @Parameter(description = "记录ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("根据ID获取农机维护记录: {}", id);
         MaintainRecord maintainRecord = maintainRecordService.getMaintainRecordById(id);
-        return Result.success(maintainRecord);
+        return ApiResponse.success(maintainRecord);
     }
 
     /**
@@ -64,12 +64,12 @@ public class MaintainRecordController {
      */
     @PostMapping("/addMaintainRecord")
     @Operation(summary = "新增农机维护记录", description = "添加新的农机维护记录")
-    public Result<Boolean> addMaintainRecord(
+    public ApiResponse<Boolean> addMaintainRecord(
             @Parameter(description = "农机维护记录信息", required = true)
             @RequestBody MaintainRecord maintainRecord) {
         log.info("新增农机维护记录: {}", maintainRecord);
         boolean result = maintainRecordService.addMaintainRecord(maintainRecord);
-        return Result.success(result);
+        return ApiResponse.success(result);
     }
 
     /**
@@ -79,12 +79,12 @@ public class MaintainRecordController {
      */
     @PutMapping("/updateMaintainRecord")
     @Operation(summary = "更新农机维护记录", description = "更新已有的农机维护记录信息")
-    public Result<Boolean> updateMaintainRecord(
+    public ApiResponse<Boolean> updateMaintainRecord(
             @Parameter(description = "农机维护记录信息", required = true)
             @RequestBody MaintainRecord maintainRecord) {
         log.info("更新农机维护记录: {}", maintainRecord);
         boolean result = maintainRecordService.updateMaintainRecord(maintainRecord);
-        return Result.success(result);
+        return ApiResponse.success(result);
     }
 
     /**
@@ -94,12 +94,12 @@ public class MaintainRecordController {
      */
     @DeleteMapping("/deleteMaintainRecord/{id}")
     @Operation(summary = "删除农机维护记录", description = "根据ID删除农机维护记录")
-    public Result<Boolean> deleteMaintainRecord(
+    public ApiResponse<Boolean> deleteMaintainRecord(
             @Parameter(description = "记录ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("删除农机维护记录: {}", id);
         boolean result = maintainRecordService.deleteMaintainRecord(id);
-        return Result.success(result);
+        return ApiResponse.success(result);
     }
 
     /**
@@ -119,7 +119,7 @@ public class MaintainRecordController {
      */
     @GetMapping("/getMaintainRecordPage")
     @Operation(summary = "分页查询农机维护记录", description = "分页查询农机维护记录列表")
-    public Result<Page<MaintainRecord>> getMaintainRecordPage(
+    public ApiResponse<Page<MaintainRecord>> getMaintainRecordPage(
             @Parameter(description = "页码", required = true, example = "1")
             @RequestParam(defaultValue = "1") int pageNum,
             @Parameter(description = "每页条数", required = true, example = "10")
@@ -175,7 +175,7 @@ public class MaintainRecordController {
         }
         
         Page<MaintainRecord> page = maintainRecordService.getMaintainRecordPage(pageNum, pageSize, params);
-        return Result.success(page);
+        return ApiResponse.success(page);
     }
 
     /**
@@ -185,12 +185,12 @@ public class MaintainRecordController {
      */
     @GetMapping("/getMaintainRecordsByMachineryId/{machineryId}")
     @Operation(summary = "根据农机ID查询维护记录", description = "根据农机ID查询相关的维护记录")
-    public Result<List<MaintainRecord>> getMaintainRecordsByMachineryId(
+    public ApiResponse<List<MaintainRecord>> getMaintainRecordsByMachineryId(
             @Parameter(description = "农机ID", required = true, example = "1")
             @PathVariable("machineryId") Long machineryId) {
         log.info("根据农机ID查询维护记录: {}", machineryId);
         List<MaintainRecord> maintainRecords = maintainRecordService.getMaintainRecordsByMachineryId(machineryId);
-        return Result.success(maintainRecords);
+        return ApiResponse.success(maintainRecords);
     }
 
     /**
@@ -200,12 +200,12 @@ public class MaintainRecordController {
      */
     @GetMapping("/getMaintainRecordsByType/{maintainType}")
     @Operation(summary = "根据维护类型查询维护记录", description = "根据维护类型查询相关的维护记录")
-    public Result<List<MaintainRecord>> getMaintainRecordsByType(
+    public ApiResponse<List<MaintainRecord>> getMaintainRecordsByType(
             @Parameter(description = "维护类型", required = true, example = "常规保养")
             @PathVariable("maintainType") String maintainType) {
         log.info("根据维护类型查询维护记录: {}", maintainType);
         List<MaintainRecord> maintainRecords = maintainRecordService.getMaintainRecordsByType(maintainType);
-        return Result.success(maintainRecords);
+        return ApiResponse.success(maintainRecords);
     }
 
     /**
@@ -215,12 +215,12 @@ public class MaintainRecordController {
      */
     @GetMapping("/getMaintainRecordsByCreateUserId/{createUserId}")
     @Operation(summary = "根据创建人ID查询维护记录", description = "根据创建人ID查询相关的维护记录")
-    public Result<List<MaintainRecord>> getMaintainRecordsByCreateUserId(
+    public ApiResponse<List<MaintainRecord>> getMaintainRecordsByCreateUserId(
             @Parameter(description = "创建人ID", required = true, example = "1")
             @PathVariable("createUserId") Long createUserId) {
         log.info("根据创建人ID查询维护记录: {}", createUserId);
         List<MaintainRecord> maintainRecords = maintainRecordService.getMaintainRecordsByCreateUserId(createUserId);
-        return Result.success(maintainRecords);
+        return ApiResponse.success(maintainRecords);
     }
 
     /**
@@ -231,13 +231,13 @@ public class MaintainRecordController {
      */
     @GetMapping("/getMaintainRecordsByTimeRange")
     @Operation(summary = "根据维护时间范围查询维护记录", description = "根据指定的时间范围查询维护记录")
-    public Result<List<MaintainRecord>> getMaintainRecordsByTimeRange(
+    public ApiResponse<List<MaintainRecord>> getMaintainRecordsByTimeRange(
             @Parameter(description = "开始时间", required = true, example = "2023-01-01 00:00:00")
             @RequestParam String startTime,
             @Parameter(description = "结束时间", required = true, example = "2023-12-31 23:59:59")
             @RequestParam String endTime) {
         log.info("根据维护时间范围查询维护记录，开始时间：{}，结束时间：{}", startTime, endTime);
         List<MaintainRecord> maintainRecords = maintainRecordService.getMaintainRecordsByTimeRange(startTime, endTime);
-        return Result.success(maintainRecords);
+        return ApiResponse.success(maintainRecords);
     }
 }

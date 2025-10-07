@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.agrimachinerymanager.common.result.Result;
+import org.agrimachinerymanager.common.result.ApiResponse;
 import org.agrimachinerymanager.entity.SysOperateLog;
 import org.agrimachinerymanager.service.SysOperateLogService;
 import org.slf4j.Logger;
@@ -34,10 +34,10 @@ public class SysOperateLogController {
      */
     @GetMapping("/getAllSysOperateLogs")
     @Operation(summary = "获取所有系统操作日志", description = "查询系统中所有的操作日志信息")
-    public Result<List<SysOperateLog>> getAllSysOperateLogs() {
+    public ApiResponse<List<SysOperateLog>> getAllSysOperateLogs() {
         log.info("获取所有系统操作日志");
         List<SysOperateLog> sysOperateLogs = sysOperateLogService.getAllSysOperateLogs();
-        return Result.success(sysOperateLogs);
+        return ApiResponse.success(sysOperateLogs);
     }
 
     /**
@@ -47,12 +47,12 @@ public class SysOperateLogController {
      */
     @GetMapping("/getSysOperateLogById/{id}")
     @Operation(summary = "根据ID获取系统操作日志", description = "根据日志ID查询系统操作日志的详细信息")
-    public Result<SysOperateLog> getSysOperateLogById(
+    public ApiResponse<SysOperateLog> getSysOperateLogById(
             @Parameter(description = "日志ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("根据ID获取系统操作日志: {}", id);
         SysOperateLog sysOperateLog = sysOperateLogService.getSysOperateLogById(id);
-        return Result.success(sysOperateLog);
+        return ApiResponse.success(sysOperateLog);
     }
 
     /**
@@ -62,12 +62,12 @@ public class SysOperateLogController {
      */
     @PostMapping("/addSysOperateLog")
     @Operation(summary = "添加系统操作日志", description = "添加新的系统操作日志")
-    public Result<SysOperateLog> addSysOperateLog(
+    public ApiResponse<SysOperateLog> addSysOperateLog(
             @Parameter(description = "系统操作日志信息", required = true)
             @RequestBody SysOperateLog sysOperateLog) {
         log.info("添加系统操作日志: {}", sysOperateLog);
         sysOperateLogService.addSysOperateLog(sysOperateLog);
-        return Result.success(sysOperateLog);
+        return ApiResponse.success(sysOperateLog);
     }
 
     /**
@@ -77,12 +77,12 @@ public class SysOperateLogController {
      */
     @PutMapping("/updateSysOperateLog")
     @Operation(summary = "更新系统操作日志", description = "更新已有的系统操作日志信息")
-    public Result<Boolean> updateSysOperateLog(
+    public ApiResponse<Boolean> updateSysOperateLog(
             @Parameter(description = "系统操作日志信息", required = true)
             @RequestBody SysOperateLog sysOperateLog) {
         log.info("更新系统操作日志: {}", sysOperateLog);
         boolean result = sysOperateLogService.updateSysOperateLog(sysOperateLog);
-        return Result.success(result);
+        return ApiResponse.success(result);
     }
 
     /**
@@ -92,12 +92,12 @@ public class SysOperateLogController {
      */
     @DeleteMapping("/deleteSysOperateLog/{id}")
     @Operation(summary = "删除系统操作日志", description = "根据ID删除系统操作日志")
-    public Result<Boolean> deleteSysOperateLog(
+    public ApiResponse<Boolean> deleteSysOperateLog(
             @Parameter(description = "日志ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("删除系统操作日志: {}", id);
         boolean result = sysOperateLogService.deleteSysOperateLog(id);
-        return Result.success(result);
+        return ApiResponse.success(result);
     }
 
     /**
@@ -115,7 +115,7 @@ public class SysOperateLogController {
      */
     @GetMapping("/getSysOperateLogPage")
     @Operation(summary = "分页查询系统操作日志", description = "分页查询系统操作日志列表")
-    public Result<Page<SysOperateLog>> getSysOperateLogPage(
+    public ApiResponse<Page<SysOperateLog>> getSysOperateLogPage(
             @Parameter(description = "页码", required = true, example = "1")
             @RequestParam(defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页条数", required = true, example = "10")
@@ -161,7 +161,7 @@ public class SysOperateLogController {
         }
         
         Page<SysOperateLog> page = sysOperateLogService.getSysOperateLogPage(pageNum, pageSize, params);
-        return Result.success(page);
+        return ApiResponse.success(page);
     }
 
     /**
@@ -171,12 +171,12 @@ public class SysOperateLogController {
      */
     @GetMapping("/getSysOperateLogsByUserId/{userId}")
     @Operation(summary = "根据用户ID查询系统操作日志", description = "根据用户ID查询相关的系统操作日志")
-    public Result<List<SysOperateLog>> getSysOperateLogsByUserId(
+    public ApiResponse<List<SysOperateLog>> getSysOperateLogsByUserId(
             @Parameter(description = "用户ID", required = true, example = "1")
             @PathVariable("userId") Long userId) {
         log.info("根据用户ID查询系统操作日志: {}", userId);
         List<SysOperateLog> sysOperateLogs = sysOperateLogService.getSysOperateLogsByUserId(userId);
-        return Result.success(sysOperateLogs);
+        return ApiResponse.success(sysOperateLogs);
     }
 
     /**
@@ -186,12 +186,12 @@ public class SysOperateLogController {
      */
     @GetMapping("/getSysOperateLogsByType/{operateType}")
     @Operation(summary = "根据操作类型查询系统操作日志", description = "根据操作类型查询相关的系统操作日志")
-    public Result<List<SysOperateLog>> getSysOperateLogsByType(
+    public ApiResponse<List<SysOperateLog>> getSysOperateLogsByType(
             @Parameter(description = "操作类型", required = true, example = "add")
             @PathVariable("operateType") String operateType) {
         log.info("根据操作类型查询系统操作日志: {}", operateType);
         List<SysOperateLog> sysOperateLogs = sysOperateLogService.getSysOperateLogsByType(operateType);
-        return Result.success(sysOperateLogs);
+        return ApiResponse.success(sysOperateLogs);
     }
 
     /**
@@ -201,11 +201,11 @@ public class SysOperateLogController {
      */
     @GetMapping("/getSysOperateLogsByModule/{operateModule}")
     @Operation(summary = "根据操作模块查询系统操作日志", description = "根据操作模块查询相关的系统操作日志")
-    public Result<List<SysOperateLog>> getSysOperateLogsByModule(
+    public ApiResponse<List<SysOperateLog>> getSysOperateLogsByModule(
             @Parameter(description = "操作模块", required = true, example = "machinery")
             @PathVariable("operateModule") String operateModule) {
         log.info("根据操作模块查询系统操作日志: {}", operateModule);
         List<SysOperateLog> sysOperateLogs = sysOperateLogService.getSysOperateLogsByModule(operateModule);
-        return Result.success(sysOperateLogs);
+        return ApiResponse.success(sysOperateLogs);
     }
 }

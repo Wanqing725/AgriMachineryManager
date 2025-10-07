@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.agrimachinerymanager.common.result.Result;
+import org.agrimachinerymanager.common.result.ApiResponse;
 import org.agrimachinerymanager.entity.SysDict;
 import org.agrimachinerymanager.service.SysDictService;
 import org.slf4j.Logger;
@@ -34,10 +34,10 @@ public class SysDictController {
      */
     @GetMapping("/getAllSysDicts")
     @Operation(summary = "获取所有数据字典", description = "查询系统中所有的数据字典信息")
-    public Result<List<SysDict>> getAllSysDicts() {
+    public ApiResponse<List<SysDict>> getAllSysDicts() {
         log.info("获取所有数据字典");
         List<SysDict> dictList = sysDictService.getAllSysDicts();
-        return Result.success(dictList);
+        return ApiResponse.success(dictList);
     }
 
     /**
@@ -47,12 +47,12 @@ public class SysDictController {
      */
     @GetMapping("/getSysDictById/{id}")
     @Operation(summary = "根据ID获取数据字典", description = "根据字典ID查询数据字典的详细信息")
-    public Result<SysDict> getSysDictById(
+    public ApiResponse<SysDict> getSysDictById(
             @Parameter(description = "字典ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("根据ID获取数据字典: {}", id);
         SysDict sysDict = sysDictService.getSysDictById(id);
-        return Result.success(sysDict);
+        return ApiResponse.success(sysDict);
     }
 
     /**
@@ -62,12 +62,12 @@ public class SysDictController {
      */
     @PostMapping("/addSysDict")
     @Operation(summary = "新增数据字典", description = "添加新的数据字典")
-    public Result<SysDict> addSysDict(
+    public ApiResponse<SysDict> addSysDict(
             @Parameter(description = "数据字典信息", required = true)
             @RequestBody SysDict sysDict) {
         log.info("新增数据字典: {}", sysDict);
         sysDictService.addSysDict(sysDict);
-        return Result.success(sysDict);
+        return ApiResponse.success(sysDict);
     }
 
     /**
@@ -77,12 +77,12 @@ public class SysDictController {
      */
     @PutMapping("/updateSysDict")
     @Operation(summary = "更新数据字典", description = "更新已有的数据字典信息")
-    public Result<Boolean> updateSysDict(
+    public ApiResponse<Boolean> updateSysDict(
             @Parameter(description = "数据字典信息", required = true)
             @RequestBody SysDict sysDict) {
         log.info("更新数据字典: {}", sysDict);
         sysDictService.updateSysDict(sysDict);
-        return Result.success(true);
+        return ApiResponse.success(true);
     }
 
     /**
@@ -92,12 +92,12 @@ public class SysDictController {
      */
     @DeleteMapping("/deleteSysDict/{id}")
     @Operation(summary = "删除数据字典", description = "根据ID删除数据字典")
-    public Result<Boolean> deleteSysDict(
+    public ApiResponse<Boolean> deleteSysDict(
             @Parameter(description = "字典ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("删除数据字典: {}", id);
         sysDictService.deleteSysDict(id);
-        return Result.success(true);
+        return ApiResponse.success(true);
     }
 
     /**
@@ -111,7 +111,7 @@ public class SysDictController {
      */
     @GetMapping("/getSysDictPage")
     @Operation(summary = "分页查询数据字典", description = "分页查询数据字典列表，支持条件筛选")
-    public Result<Page<SysDict>> getSysDictPage(
+    public ApiResponse<Page<SysDict>> getSysDictPage(
             @Parameter(description = "页码", required = true, example = "1")
             @RequestParam("pageNum") int pageNum,
             @Parameter(description = "每页条数", required = true, example = "10")
@@ -132,7 +132,7 @@ public class SysDictController {
 
         // 调用service层方法进行分页查询
         Page<SysDict> pageResult = sysDictService.getSysDictPage(pageNum, pageSize, params);
-        return Result.success(pageResult);
+        return ApiResponse.success(pageResult);
     }
     
     /**
@@ -142,12 +142,12 @@ public class SysDictController {
      */
     @GetMapping("/getSysDictByType/{type}")
     @Operation(summary = "根据类型获取字典数据", description = "根据字典类型查询字典数据列表")
-    public Result<List<SysDict>> getSysDictByType(
+    public ApiResponse<List<SysDict>> getSysDictByType(
             @Parameter(description = "字典类型", required = true, example = "machinery_type")
             @PathVariable("type") String type) {
         log.info("根据字典类型获取字典数据: {}", type);
         List<SysDict> dictList = sysDictService.getSysDictByType(type);
-        return Result.success(dictList);
+        return ApiResponse.success(dictList);
     }
     
     /**
@@ -158,13 +158,13 @@ public class SysDictController {
      */
     @GetMapping("/getSysDictByTypeAndCode")
     @Operation(summary = "根据类型和编码获取字典数据", description = "根据字典类型和编码查询具体的字典数据")
-    public Result<SysDict> getSysDictByTypeAndCode(
+    public ApiResponse<SysDict> getSysDictByTypeAndCode(
             @Parameter(description = "字典类型", required = true, example = "machinery_type")
             @RequestParam("type") String type,
             @Parameter(description = "字典编码", required = true, example = "TRACTOR")
             @RequestParam("code") String code) {
         log.info("根据字典类型和编码获取字典数据: type={}, code={}", type, code);
         SysDict sysDict = sysDictService.getSysDictByTypeAndCode(type, code);
-        return Result.success(sysDict);
+        return ApiResponse.success(sysDict);
     }
 }

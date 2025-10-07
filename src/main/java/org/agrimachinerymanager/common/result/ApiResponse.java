@@ -1,4 +1,4 @@
-package org.agrimachinerymanager.common;
+package org.agrimachinerymanager.common.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

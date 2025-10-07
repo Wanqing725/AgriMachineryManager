@@ -1,6 +1,7 @@
 package org.agrimachinerymanager.exception;
 
-import org.agrimachinerymanager.common.ApiResponse;
+import org.agrimachinerymanager.common.result.ApiResponse;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -18,6 +19,15 @@ public class GlobalExceptionHandler {
     public ApiResponse<?> handleBaseException(BaseException e) {
         e.printStackTrace();
         return ApiResponse.fail(400, e.getMessage());
+    }
+
+    /**
+     * 处理Spring Security用户名未找到异常
+     */
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ApiResponse<?> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        e.printStackTrace();
+        return ApiResponse.fail(401, "用户不存在或用户名错误");
     }
 
     /**

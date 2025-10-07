@@ -2,10 +2,16 @@ package org.agrimachinerymanager.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.agrimachinerymanager.dto.LoginDTO;
 import org.agrimachinerymanager.entity.SysUser;
+import org.agrimachinerymanager.vo.LoginVo;
+import org.agrimachinerymanager.common.util.JwtUtil;
+import org.agrimachinerymanager.common.util.PasswordUtil;
 import org.agrimachinerymanager.exception.BaseException;
 import org.agrimachinerymanager.mapper.SysUserMapper;
 import org.agrimachinerymanager.service.SysUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +24,8 @@ import java.util.Map;
  */
 @Service
 public class SysUserServiceImpl implements SysUserService {
+
+    private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
     @Autowired
     private SysUserMapper sysUserMapper;
@@ -83,6 +91,11 @@ public class SysUserServiceImpl implements SysUserService {
         // 设置创建时间和更新时间
         sysUser.setCreateTime(LocalDateTime.now());
         sysUser.setUpdateTime(LocalDateTime.now());
+        
+        // 对密码进行BCrypt加密
+        String encodedPassword = PasswordUtil.encode(sysUser.getPassword());
+        sysUser.setPassword(encodedPassword);
+        
         // 调用mapper的insert方法插入数据
         return sysUserMapper.insert(sysUser) > 0;
     }
@@ -195,5 +208,64 @@ public class SysUserServiceImpl implements SysUserService {
 
         // 调用mapper的selectPage方法进行分页查询
         return sysUserMapper.selectPage(page, queryWrapper);
+    }
+    
+    @Autowired
+    private JwtUtil jwtUtil;
+    
+    @Override
+    public LoginVo login(LoginDTO loginDTO) {
+        // 验证登录信息
+        if (loginDTO == null) {
+            throw new BaseException("登录信息不能为空");
+        }
+        
+        String username = loginDTO.getUsername();
+        String password = loginDTO.getPassword();
+        
+        if (username == null || username.trim().isEmpty()) {
+            throw new BaseException("用户名不能为空");
+        }
+        
+        if (password == null || password.trim().isEmpty()) {
+            throw new BaseException("密码不能为空");
+        }
+        
+        // 根据用户名查询用户
+        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        SysUser sysUser = sysUserMapper.selectOne(queryWrapper);
+        
+        // 验证用户是否存在
+        if (sysUser == null) {
+            throw new BaseException("用户名或密码错误");
+        }
+        
+        // 验证密码是否正确
+        if (!PasswordUtil.matches(password, sysUser.getPassword())) {
+            throw new BaseException("用户名或密码错误");
+        }
+        
+        // 验证用户状态是否正常
+        if (sysUser.getStatus() == 0) {
+            throw new BaseException("用户已被禁用，请联系管理员");
+        }
+        
+        // 生成JWT令牌
+        String token = jwtUtil.generateToken(sysUser.getId(), sysUser.getUsername(), sysUser.getRole());
+        
+        // 输出token到日志
+        log.info("🔑 用户 [{}] 登录成功，生成的Token: {}", username, token);
+        
+        // 构建登录响应对象
+        LoginVo loginVo = new LoginVo();
+        loginVo.setId(sysUser.getId());
+        loginVo.setUsername(sysUser.getUsername());
+        loginVo.setRealName(sysUser.getRealName());
+        loginVo.setRole(sysUser.getRole());
+        loginVo.setStatus(sysUser.getStatus());
+        loginVo.setToken(token);
+        
+        return loginVo;
     }
 }

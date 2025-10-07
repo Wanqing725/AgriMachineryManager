@@ -4,6 +4,8 @@ server:
     context-path: /agri-machinery
 
 spring:
+  main:
+    allow-circular-references: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/agricultural_machinery_db?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
@@ -59,3 +61,10 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - org.agrimachinerymanager.controller
+
+# JWT配置
+jwt:
+  # 签名密钥，已更新为满足HS512算法要求的64字节密钥
+  secret: agrimachinery-manager-2024-secure-key-long-enough-for-hs512-algorithm-complex-password-12345678
+  # 令牌过期时间（秒），这里设置为7天
+  expiration: 604800

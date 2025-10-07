@@ -1,7 +1,9 @@
 package org.agrimachinerymanager.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.agrimachinerymanager.dto.LoginDTO;
 import org.agrimachinerymanager.entity.SysUser;
+import org.agrimachinerymanager.vo.LoginVo;
 
 import java.util.List;
 import java.util.Map;
@@ -53,4 +55,11 @@ public interface SysUserService {
      * @return 分页结果
      */
     Page<SysUser> getSysUserPage(int pageNum, int pageSize, Map<String, Object> params);
+    
+    /**
+     * 用户登录
+     * @param loginDTO 登录信息
+     * @return 登录结果
+     */
+    LoginVo login(LoginDTO loginDTO);
 }

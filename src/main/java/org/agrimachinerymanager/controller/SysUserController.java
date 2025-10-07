@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.agrimachinerymanager.common.result.Result;
+import org.agrimachinerymanager.common.result.ApiResponse;
 import org.agrimachinerymanager.entity.SysUser;
 import org.agrimachinerymanager.service.SysUserService;
 import org.slf4j.Logger;
@@ -33,10 +33,10 @@ public class SysUserController {
      */
     @GetMapping("/getAllSysUsers")
     @Operation(summary = "获取所有系统用户", description = "查询系统中所有的用户信息")
-    public Result<List<SysUser>> getAllSysUsers() {
+    public ApiResponse<List<SysUser>> getAllSysUsers() {
         log.info("获取所有系统用户");
         List<SysUser> users = sysUserService.getAllSysUsers();
-        return Result.success(users);
+        return ApiResponse.success(users);
     }
 
     /**
@@ -46,12 +46,12 @@ public class SysUserController {
      */
     @GetMapping("/getSysUserById/{id}")
     @Operation(summary = "根据ID获取用户信息", description = "根据用户ID查询用户的详细信息")
-    public Result<SysUser> getSysUserById(
+    public ApiResponse<SysUser> getSysUserById(
             @Parameter(description = "用户ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("根据ID获取用户信息: {}", id);
         SysUser sysUser = sysUserService.getSysUserById(id);
-        return Result.success(sysUser);
+        return ApiResponse.success(sysUser);
     }
 
     /**
@@ -61,12 +61,12 @@ public class SysUserController {
      */
     @PostMapping("/addSysUser")
     @Operation(summary = "新增用户", description = "添加新的系统用户")
-    public Result<SysUser> addSysUser(
+    public ApiResponse<SysUser> addSysUser(
             @Parameter(description = "用户信息", required = true)
             @RequestBody SysUser sysUser) {
         log.info("新增用户: {}", sysUser);
         sysUserService.addSysUser(sysUser);
-        return Result.success(sysUser);
+        return ApiResponse.success(sysUser);
     }
 
     /**
@@ -76,12 +76,12 @@ public class SysUserController {
      */
     @PutMapping("/updateSysUser")
     @Operation(summary = "更新用户", description = "更新已有的用户信息")
-    public Result<Boolean> updateSysUser(
+    public ApiResponse<Boolean> updateSysUser(
             @Parameter(description = "用户信息", required = true)
             @RequestBody SysUser sysUser) {
         log.info("更新用户: {}", sysUser);
         sysUserService.updateSysUser(sysUser);
-        return Result.success(true);
+        return ApiResponse.success(true);
     }
 
     /**
@@ -91,12 +91,12 @@ public class SysUserController {
      */
     @DeleteMapping("/deleteSysUser/{id}")
     @Operation(summary = "删除用户", description = "根据ID删除系统用户")
-    public Result<Boolean> deleteSysUser(
+    public ApiResponse<Boolean> deleteSysUser(
             @Parameter(description = "用户ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("删除用户: {}", id);
         sysUserService.deleteSysUser(id);
-        return Result.success(true);
+        return ApiResponse.success(true);
     }
 
     /**
@@ -112,7 +112,7 @@ public class SysUserController {
      */
     @GetMapping("/getSysUserPage")
     @Operation(summary = "分页查询用户", description = "分页查询系统用户列表，支持条件筛选")
-    public Result<Page<SysUser>> getSysUserPage(
+    public ApiResponse<Page<SysUser>> getSysUserPage(
             @Parameter(description = "页码", required = true, example = "1")
             @RequestParam("pageNum") int pageNum,
             @Parameter(description = "每页条数", required = true, example = "10")
@@ -139,6 +139,6 @@ public class SysUserController {
 
         // 调用service层方法进行分页查询
         Page<SysUser> pageResult = sysUserService.getSysUserPage(pageNum, pageSize, params);
-        return Result.success(pageResult);
+        return ApiResponse.success(pageResult);
     }
 }

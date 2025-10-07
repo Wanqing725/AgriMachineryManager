@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.agrimachinerymanager.common.result.Result;
+import org.agrimachinerymanager.common.result.ApiResponse;
 import org.agrimachinerymanager.entity.OperationTask;
 import org.agrimachinerymanager.service.OperationTaskService;
 import org.slf4j.Logger;
@@ -34,10 +34,10 @@ public class OperationTaskController {
      */
     @GetMapping("/getAllOperationTasks")
     @Operation(summary = "获取所有作业调度任务", description = "查询系统中所有的作业调度任务信息")
-    public Result<List<OperationTask>> getAllOperationTasks() {
+    public ApiResponse<List<OperationTask>> getAllOperationTasks() {
         log.info("获取所有作业调度任务");
         List<OperationTask> operationTasks = operationTaskService.getAllOperationTasks();
-        return Result.success(operationTasks);
+        return ApiResponse.success(operationTasks);
     }
 
     /**
@@ -47,12 +47,12 @@ public class OperationTaskController {
      */
     @GetMapping("/getOperationTaskById/{id}")
     @Operation(summary = "根据ID获取作业调度任务", description = "根据任务ID查询作业调度任务的详细信息")
-    public Result<OperationTask> getOperationTaskById(
+    public ApiResponse<OperationTask> getOperationTaskById(
             @Parameter(description = "任务ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("根据ID获取作业调度任务: {}", id);
         OperationTask operationTask = operationTaskService.getOperationTaskById(id);
-        return Result.success(operationTask);
+        return ApiResponse.success(operationTask);
     }
 
     /**
@@ -62,12 +62,12 @@ public class OperationTaskController {
      */
     @PostMapping("/addOperationTask")
     @Operation(summary = "新增作业调度任务", description = "添加新的作业调度任务")
-    public Result<OperationTask> addOperationTask(
+    public ApiResponse<OperationTask> addOperationTask(
             @Parameter(description = "作业调度任务信息", required = true)
             @RequestBody OperationTask operationTask) {
         log.info("新增作业调度任务: {}", operationTask);
         operationTaskService.addOperationTask(operationTask);
-        return Result.success(operationTask);
+        return ApiResponse.success(operationTask);
     }
 
     /**
@@ -77,12 +77,12 @@ public class OperationTaskController {
      */
     @PutMapping("/updateOperationTask")
     @Operation(summary = "更新作业调度任务", description = "更新已有的作业调度任务信息")
-    public Result<Boolean> updateOperationTask(
+    public ApiResponse<Boolean> updateOperationTask(
             @Parameter(description = "作业调度任务信息", required = true)
             @RequestBody OperationTask operationTask) {
         log.info("更新作业调度任务: {}", operationTask);
         boolean result = operationTaskService.updateOperationTask(operationTask);
-        return Result.success(result);
+        return ApiResponse.success(result);
     }
 
     /**
@@ -92,12 +92,12 @@ public class OperationTaskController {
      */
     @DeleteMapping("/deleteOperationTask/{id}")
     @Operation(summary = "删除作业调度任务", description = "根据ID删除作业调度任务")
-    public Result<Boolean> deleteOperationTask(
+    public ApiResponse<Boolean> deleteOperationTask(
             @Parameter(description = "任务ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("删除作业调度任务: {}", id);
         boolean result = operationTaskService.deleteOperationTask(id);
-        return Result.success(result);
+        return ApiResponse.success(result);
     }
 
     /**
@@ -116,7 +116,7 @@ public class OperationTaskController {
      */
     @GetMapping("/getOperationTaskPage")
     @Operation(summary = "分页查询作业调度任务", description = "分页查询作业调度任务列表")
-    public Result<Page<OperationTask>> getOperationTaskPage(
+    public ApiResponse<Page<OperationTask>> getOperationTaskPage(
             @Parameter(description = "页码", required = true, example = "1")
             @RequestParam(defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页条数", required = true, example = "10")
@@ -167,7 +167,7 @@ public class OperationTaskController {
         }
         
         Page<OperationTask> page = operationTaskService.getOperationTaskPage(pageNum, pageSize, params);
-        return Result.success(page);
+        return ApiResponse.success(page);
     }
 
     /**
@@ -177,12 +177,12 @@ public class OperationTaskController {
      */
     @GetMapping("/getOperationTasksByMachineryId/{machineryId}")
     @Operation(summary = "根据农机ID查询作业调度任务", description = "根据农机ID查询相关的作业调度任务")
-    public Result<List<OperationTask>> getOperationTasksByMachineryId(
+    public ApiResponse<List<OperationTask>> getOperationTasksByMachineryId(
             @Parameter(description = "农机ID", required = true, example = "1")
             @PathVariable("machineryId") Long machineryId) {
         log.info("根据农机ID查询作业调度任务: {}", machineryId);
         List<OperationTask> operationTasks = operationTaskService.getOperationTasksByMachineryId(machineryId);
-        return Result.success(operationTasks);
+        return ApiResponse.success(operationTasks);
     }
 
     /**
@@ -192,12 +192,12 @@ public class OperationTaskController {
      */
     @GetMapping("/getOperationTasksByFarmlandId/{farmlandId}")
     @Operation(summary = "根据地块ID查询作业调度任务", description = "根据地块ID查询相关的作业调度任务")
-    public Result<List<OperationTask>> getOperationTasksByFarmlandId(
+    public ApiResponse<List<OperationTask>> getOperationTasksByFarmlandId(
             @Parameter(description = "地块ID", required = true, example = "1")
             @PathVariable("farmlandId") Long farmlandId) {
         log.info("根据地块ID查询作业调度任务: {}", farmlandId);
         List<OperationTask> operationTasks = operationTaskService.getOperationTasksByFarmlandId(farmlandId);
-        return Result.success(operationTasks);
+        return ApiResponse.success(operationTasks);
     }
 
     /**
@@ -207,11 +207,11 @@ public class OperationTaskController {
      */
     @GetMapping("/getOperationTasksByStatus/{status}")
     @Operation(summary = "根据状态查询作业调度任务", description = "根据任务状态查询作业调度任务")
-    public Result<List<OperationTask>> getOperationTasksByStatus(
+    public ApiResponse<List<OperationTask>> getOperationTasksByStatus(
             @Parameter(description = "任务状态", required = true, example = "1")
             @PathVariable("status") Integer status) {
         log.info("根据状态查询作业调度任务: {}", status);
         List<OperationTask> operationTasks = operationTaskService.getOperationTasksByStatus(status);
-        return Result.success(operationTasks);
+        return ApiResponse.success(operationTasks);
     }
 }

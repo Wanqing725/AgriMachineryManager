@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.agrimachinerymanager.common.result.Result;
+import org.agrimachinerymanager.common.result.ApiResponse;
 import org.agrimachinerymanager.entity.Notification;
 import org.agrimachinerymanager.service.NotificationService;
 import org.slf4j.Logger;
@@ -34,10 +34,10 @@ public class NotificationController {
      */
     @GetMapping("/getAllNotifications")
     @Operation(summary = "获取所有通知提醒", description = "查询系统中所有的通知提醒信息")
-    public Result<List<Notification>> getAllNotifications() {
+    public ApiResponse<List<Notification>> getAllNotifications() {
         // 调用service层方法获取所有通知提醒
         List<Notification> notificationList = notificationService.getAllNotifications();
-        return Result.success(notificationList);
+        return ApiResponse.success(notificationList);
     }
     
     /**
@@ -47,12 +47,12 @@ public class NotificationController {
      */
     @GetMapping("/getNotificationById/{id}")
     @Operation(summary = "根据ID获取通知提醒", description = "根据通知ID查询具体的通知提醒信息")
-    public Result<Notification> getNotificationById(
+    public ApiResponse<Notification> getNotificationById(
             @Parameter(description = "通知ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("获取通知提醒，ID：{}", id);
         Notification notification = notificationService.getNotificationById(id);
-        return Result.success(notification);
+        return ApiResponse.success(notification);
     }
     
     /**
@@ -62,12 +62,12 @@ public class NotificationController {
      */
     @PostMapping("/addNotification")
     @Operation(summary = "新增通知提醒", description = "添加新的通知提醒信息")
-    public Result<Notification> addNotification(
+    public ApiResponse<Notification> addNotification(
             @Parameter(description = "通知提醒信息", required = true)
             @RequestBody Notification notification) {
         log.info("新增通知提醒：{}", notification);
         notificationService.addNotification(notification);
-        return Result.success(notification);
+        return ApiResponse.success(notification);
     }
     
     /**
@@ -77,12 +77,12 @@ public class NotificationController {
      */
     @PutMapping("/updateNotification")
     @Operation(summary = "更新通知提醒", description = "更新已有的通知提醒信息")
-    public Result<Notification> updateNotification(
+    public ApiResponse<Notification> updateNotification(
             @Parameter(description = "通知提醒信息", required = true)
             @RequestBody Notification notification) {
         log.info("更新通知提醒：{}", notification);
         notificationService.updateNotification(notification);
-        return Result.success(notification);
+        return ApiResponse.success(notification);
     }
     
     /**
@@ -92,12 +92,12 @@ public class NotificationController {
      */
     @DeleteMapping("/deleteNotification/{id}")
     @Operation(summary = "删除通知提醒", description = "根据ID删除通知提醒信息")
-    public Result<Boolean> deleteNotification(
+    public ApiResponse<Boolean> deleteNotification(
             @Parameter(description = "通知ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("删除通知提醒，ID：{}", id);
         notificationService.deleteNotification(id);
-        return Result.success(true);
+        return ApiResponse.success(true);
     }
     
     /**
@@ -112,7 +112,7 @@ public class NotificationController {
      */
     @GetMapping("/getNotificationPage")
     @Operation(summary = "分页查询通知提醒", description = "分页查询通知提醒信息，支持条件筛选")
-    public Result<Page<Notification>> getNotificationPage(
+    public ApiResponse<Page<Notification>> getNotificationPage(
             @Parameter(description = "页码", required = true, example = "1")
             @RequestParam("pageNum") int pageNum,
             
@@ -141,7 +141,7 @@ public class NotificationController {
         // 调用分页查询方法
         Page<Notification> pageResult = notificationService.getNotificationPage(pageNum, pageSize, params);
         
-        return Result.success(pageResult);
+        return ApiResponse.success(pageResult);
     }
     
     /**
@@ -151,12 +151,12 @@ public class NotificationController {
      */
     @GetMapping("/getNotificationsByUserId/{userId}")
     @Operation(summary = "根据用户ID获取通知提醒列表", description = "查询指定用户的所有通知提醒")
-    public Result<List<Notification>> getNotificationsByUserId(
+    public ApiResponse<List<Notification>> getNotificationsByUserId(
             @Parameter(description = "用户ID", required = true, example = "1")
             @PathVariable("userId") Long userId) {
         log.info("获取用户的通知提醒列表，用户ID：{}", userId);
         List<Notification> notificationList = notificationService.getNotificationsByUserId(userId);
-        return Result.success(notificationList);
+        return ApiResponse.success(notificationList);
     }
     
     /**
@@ -166,11 +166,11 @@ public class NotificationController {
      */
     @PutMapping("/markNotificationAsRead/{id}")
     @Operation(summary = "标记通知为已读", description = "将未读通知标记为已读状态")
-    public Result<Boolean> markNotificationAsRead(
+    public ApiResponse<Boolean> markNotificationAsRead(
             @Parameter(description = "通知ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("标记通知为已读，通知ID：{}", id);
         notificationService.markNotificationAsRead(id);
-        return Result.success(true);
+        return ApiResponse.success(true);
     }
 }

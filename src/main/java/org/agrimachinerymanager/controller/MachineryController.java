@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.agrimachinerymanager.common.result.Result;
+import org.agrimachinerymanager.common.result.ApiResponse;
 import org.agrimachinerymanager.entity.Machinery;
 import org.agrimachinerymanager.service.MachineryService;
 import org.slf4j.Logger;
@@ -33,10 +33,11 @@ public class MachineryController {
      */
     @GetMapping("/getAllMachinery")
     @Operation(summary = "获取所有农机档案", description = "查询系统中所有的农机档案信息")
-    public Result<List<Machinery>> getAllMachinery(){
+    public ApiResponse<List<Machinery>> getAllMachinery(){
         // 调用service层方法获取所有农机档案
         List<Machinery> machineryList = machineryService.getAllMachinery();
-        return Result.success(machineryList);
+        log.info("获取所以农机档案");
+        return ApiResponse.success(machineryList);
     }
     
     /**
@@ -46,12 +47,12 @@ public class MachineryController {
      */
     @GetMapping("/getMachineryById/{id}")
     @Operation(summary = "根据ID获取农机档案", description = "根据农机ID查询具体的农机档案信息")
-    public Result<Machinery> getMachineryById(
+    public ApiResponse<Machinery> getMachineryById(
             @Parameter(description = "农机ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("获取农机档案，ID：{}", id);
         Machinery machinery = machineryService.getMachineryById(id);
-        return Result.success(machinery);
+        return ApiResponse.success(machinery);
     }
     
     /**
@@ -61,12 +62,12 @@ public class MachineryController {
      */
     @PostMapping("/addMachinery")
     @Operation(summary = "新增农机档案", description = "添加新的农机档案信息")
-    public Result<Machinery> addMachinery(
+    public ApiResponse<Machinery> addMachinery(
             @Parameter(description = "农机档案信息", required = true)
             @RequestBody Machinery machinery) {
         log.info("新增农机档案：{}", machinery);
         machineryService.addMachinery(machinery);
-        return Result.success(machinery);
+        return ApiResponse.success(machinery);
     }
     
     /**
@@ -76,12 +77,12 @@ public class MachineryController {
      */
     @PutMapping("/updateMachinery")
     @Operation(summary = "更新农机档案", description = "更新已有的农机档案信息")
-    public Result<Machinery> updateMachinery(
+    public ApiResponse<Machinery> updateMachinery(
             @Parameter(description = "农机档案信息", required = true)
             @RequestBody Machinery machinery) {
         log.info("更新农机档案：{}", machinery);
         machineryService.updateMachinery(machinery);
-        return Result.success(machinery);
+        return ApiResponse.success(machinery);
     }
     
     /**
@@ -91,12 +92,12 @@ public class MachineryController {
      */
     @DeleteMapping("/deleteMachinery/{id}")
     @Operation(summary = "删除农机档案", description = "根据ID删除农机档案")
-    public Result<Boolean> deleteMachinery(
+    public ApiResponse<Boolean> deleteMachinery(
             @Parameter(description = "农机ID", required = true, example = "1")
             @PathVariable("id") Long id) {
         log.info("删除农机档案，ID：{}", id);
         machineryService.deleteMachinery(id);
-        return Result.success(true);
+        return ApiResponse.success(true);
     }
     
     /**
@@ -112,7 +113,7 @@ public class MachineryController {
      */
     @GetMapping("/getMachineryPage")
     @Operation(summary = "分页查询农机档案", description = "分页查询农机档案，支持条件筛选")
-    public Result<Page<Machinery>> getMachineryPage(
+    public ApiResponse<Page<Machinery>> getMachineryPage(
             @Parameter(description = "页码", required = true, example = "1")
             @RequestParam("pageNum") int pageNum,
             
@@ -145,6 +146,6 @@ public class MachineryController {
         // 调用分页查询方法
         Page<Machinery> pageResult = machineryService.getMachineryPage(pageNum, pageSize, params);
         
-        return Result.success(pageResult);
+        return ApiResponse.success(pageResult);
     }
 }
