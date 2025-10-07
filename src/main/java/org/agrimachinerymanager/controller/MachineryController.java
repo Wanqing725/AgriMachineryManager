@@ -10,6 +10,7 @@ import org.agrimachinerymanager.service.MachineryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -31,12 +32,13 @@ public class MachineryController {
      * 获取所有农机档案
      * @return 农机档案列表
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAllMachinery")
     @Operation(summary = "获取所有农机档案", description = "查询系统中所有的农机档案信息")
     public ApiResponse<List<Machinery>> getAllMachinery(){
         // 调用service层方法获取所有农机档案
         List<Machinery> machineryList = machineryService.getAllMachinery();
-        log.info("获取所以农机档案");
+        log.info("获取所有农机档案");
         return ApiResponse.success(machineryList);
     }
     
