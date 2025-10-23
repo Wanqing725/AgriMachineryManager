@@ -10,6 +10,7 @@ import org.agrimachinerymanager.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public class SysUserController {
      * 获取所有系统用户
      * @return 用户列表
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAllSysUsers")
     @Operation(summary = "获取所有系统用户", description = "查询系统中所有的用户信息")
     public ApiResponse<List<SysUser>> getAllSysUsers() {
@@ -44,6 +46,7 @@ public class SysUserController {
      * @param id 用户ID
      * @return 用户信息
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getSysUserById/{id}")
     @Operation(summary = "根据ID获取用户信息", description = "根据用户ID查询用户的详细信息")
     public ApiResponse<SysUser> getSysUserById(
@@ -59,6 +62,7 @@ public class SysUserController {
      * @param sysUser 用户信息
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/addSysUser")
     @Operation(summary = "新增用户", description = "添加新的系统用户")
     public ApiResponse<SysUser> addSysUser(
@@ -74,6 +78,7 @@ public class SysUserController {
      * @param sysUser 用户信息
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/updateSysUser")
     @Operation(summary = "更新用户", description = "更新已有的用户信息")
     public ApiResponse<Boolean> updateSysUser(
@@ -89,6 +94,7 @@ public class SysUserController {
      * @param id 用户ID
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/deleteSysUser/{id}")
     @Operation(summary = "删除用户", description = "根据ID删除系统用户")
     public ApiResponse<Boolean> deleteSysUser(
@@ -110,6 +116,7 @@ public class SysUserController {
      * @param status 状态（可选）
      * @return 分页结果
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getSysUserPage")
     @Operation(summary = "分页查询用户", description = "分页查询系统用户列表，支持条件筛选")
     public ApiResponse<Page<SysUser>> getSysUserPage(

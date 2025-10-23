@@ -91,4 +91,12 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+    
+    /**
+     * 获取令牌过期时间配置
+     * @return 过期时间（秒）
+     */
+    public long getExpiration() {
+        return expiration;
+    }
 }

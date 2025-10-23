@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /agri-machinery
+    context-path: 
 
 spring:
   main:
@@ -45,15 +45,15 @@ mybatis-plus:
       # 主键自增
       id-type: auto
 
-# Knife4j
+# Knife4j接口文档配置
 knife4j:
   enable: true
   openapi:
-    title: ????????API??
-    description: ???????????????
+    title: 农业机械管理系统API文档
+    description: 提供农机管理、作业调度、维护记录等功能的RESTful API接口
     version: 1.0.0
     contact:
-      name: ???
+      name: 开发团队
       email: developer@example.com
 
     group:

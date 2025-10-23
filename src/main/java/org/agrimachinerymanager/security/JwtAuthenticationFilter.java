@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.agrimachinerymanager.common.util.JwtUtil;
+import org.agrimachinerymanager.common.util.JwtTokenBlacklist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,32 +33,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     // 不需要认证的路径列表，考虑前缀/agri-machinery
     private static final List<String> PERMIT_ALL_PATHS = Arrays.asList(
-            "/agri-machinery/api/auth/login",
+            // 登录相关路径
             "/api/auth/login",
-            "/agri-machinery/doc.html",
+            "/api/auth/login",
+            "/auth/login",
+            "/api/auth/logout",
+            "/api/auth/logout",
+            "/auth/logout",
+            // 接口文档相关路径
             "/doc.html",
-            "/agri-machinery/swagger-ui.html",
+            "/doc.html",
             "/swagger-ui.html",
-            "/agri-machinery/swagger-ui/**",
+            "/swagger-ui.html",
             "/swagger-ui/**",
-            "/agri-machinery/v3/api-docs/**",
+            "/swagger-ui/**",
             "/v3/api-docs/**",
-            "/agri-machinery/swagger-resources/**",
+            "/v3/api-docs/**",
             "/swagger-resources/**",
-            "/agri-machinery/webjars/**",
+            "/swagger-resources/**",
             "/webjars/**",
-            "/agri-machinery/css/**",
-            "/css/**",
-            "/agri-machinery/js/**",
-            "/js/**",
-            "/agri-machinery/images/**",
-            "/images/**",
-            "/agri-machinery/static/**",
-            "/static/**",
-            "/agri-machinery/public/**",
-            "/public/**",
-            "/agri-machinery/api/public/**",
-            "/api/public/**"
+            "/webjars/**"
     );
 
     @Autowired
@@ -65,6 +60,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtTokenBlacklist jwtTokenBlacklist;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -90,6 +88,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             jwt = header.substring(7);
             log.info("✅ 提取到JWT: {}", jwt);
+
+            // 检查令牌是否在黑名单中
+            if (jwtTokenBlacklist.isBlacklisted(jwt)) {
+                log.warn("❌ 令牌已被加入黑名单，拒绝访问");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token has been invalidated");
+                return;
+            }
 
             try {
                 username = jwtUtil.getUsernameFromToken(jwt);

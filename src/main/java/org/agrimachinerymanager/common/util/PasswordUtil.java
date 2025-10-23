@@ -1,6 +1,5 @@
 package org.agrimachinerymanager.common.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -11,14 +10,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class PasswordUtil {
 
-    private static BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     /**
-     * 注入Spring Security配置的BCryptPasswordEncoder实例
+     * 通过构造函数注入BCryptPasswordEncoder实例
      */
-    @Autowired
-    public void setPasswordEncoder(BCryptPasswordEncoder encoder) {
-        PasswordUtil.passwordEncoder = encoder;
+    public PasswordUtil(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -26,7 +24,7 @@ public class PasswordUtil {
      * @param rawPassword 原始密码
      * @return 加密后的密码
      */
-    public static String encode(String rawPassword) {
+    public String encode(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
     }
 
@@ -36,7 +34,7 @@ public class PasswordUtil {
      * @param encodedPassword 加密后的密码
      * @return 是否匹配
      */
-    public static boolean matches(String rawPassword, String encodedPassword) {
+    public boolean matches(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 }

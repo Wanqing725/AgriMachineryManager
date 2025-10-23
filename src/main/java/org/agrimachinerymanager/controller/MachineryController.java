@@ -32,7 +32,6 @@ public class MachineryController {
      * 获取所有农机档案
      * @return 农机档案列表
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAllMachinery")
     @Operation(summary = "获取所有农机档案", description = "查询系统中所有的农机档案信息")
     public ApiResponse<List<Machinery>> getAllMachinery(){

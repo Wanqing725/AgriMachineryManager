@@ -20,7 +20,7 @@ import java.util.Map;
  * 数据字典控制器
  */
 @RestController
-@RequestMapping("/sys-dict")
+@RequestMapping("/dict")
 @Tag(name = "数据字典管理", description = "数据字典的增删改查操作")
 public class SysDictController {
     private static final Logger log = LoggerFactory.getLogger(SysDictController.class);

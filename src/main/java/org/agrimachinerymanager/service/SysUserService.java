@@ -62,4 +62,11 @@ public interface SysUserService {
      * @return 登录结果
      */
     LoginVo login(LoginDTO loginDTO);
+    
+    /**
+     * 根据用户名获取用户信息
+     * @param username 用户名
+     * @return 用户信息
+     */
+    SysUser getSysUserByUsername(String username);
 }

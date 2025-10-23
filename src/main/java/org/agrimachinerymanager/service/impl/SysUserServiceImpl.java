@@ -7,6 +7,7 @@ import org.agrimachinerymanager.entity.SysUser;
 import org.agrimachinerymanager.vo.LoginVo;
 import org.agrimachinerymanager.common.util.JwtUtil;
 import org.agrimachinerymanager.common.util.PasswordUtil;
+import org.agrimachinerymanager.common.util.RedisLoginManager;
 import org.agrimachinerymanager.exception.BaseException;
 import org.agrimachinerymanager.mapper.SysUserMapper;
 import org.agrimachinerymanager.service.SysUserService;
@@ -29,6 +30,9 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+    
+    @Autowired
+    private PasswordUtil passwordUtil;
 
     /**
      * 获取所有系统用户
@@ -93,7 +97,7 @@ public class SysUserServiceImpl implements SysUserService {
         sysUser.setUpdateTime(LocalDateTime.now());
         
         // 对密码进行BCrypt加密
-        String encodedPassword = PasswordUtil.encode(sysUser.getPassword());
+        String encodedPassword = passwordUtil.encode(sysUser.getPassword());
         sysUser.setPassword(encodedPassword);
         
         // 调用mapper的insert方法插入数据
@@ -131,6 +135,17 @@ public class SysUserServiceImpl implements SysUserService {
             if (conflictUser != null) {
                 throw new BaseException("用户名已被其他用户使用：" + sysUser.getUsername());
             }
+        }
+        
+        // 处理密码更新：如果提供了新密码，则进行加密
+        if (sysUser.getPassword() != null && !sysUser.getPassword().trim().isEmpty()) {
+            // 新密码需要加密
+            String encodedPassword = passwordUtil.encode(sysUser.getPassword());
+            sysUser.setPassword(encodedPassword);
+            log.info("用户 [{}] 的密码已更新", sysUser.getId());
+        } else {
+            // 如果没有提供新密码，则保持原密码不变
+            sysUser.setPassword(null);
         }
         
         // 设置更新时间
@@ -213,6 +228,27 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private JwtUtil jwtUtil;
     
+    @Autowired
+    private RedisLoginManager redisLoginManager;
+    
+    @Override
+    public SysUser getSysUserByUsername(String username) {
+        if (username == null || username.trim().isEmpty()) {
+            throw new BaseException("用户名不能为空");
+        }
+        
+        // 根据用户名查询用户
+        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        SysUser sysUser = sysUserMapper.selectOne(queryWrapper);
+        
+        if (sysUser == null) {
+            throw new BaseException("未找到用户：" + username);
+        }
+        
+        return sysUser;
+    }
+    
     @Override
     public LoginVo login(LoginDTO loginDTO) {
         // 验证登录信息
@@ -242,7 +278,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
         
         // 验证密码是否正确
-        if (!PasswordUtil.matches(password, sysUser.getPassword())) {
+        if (!passwordUtil.matches(password, sysUser.getPassword())) {
             throw new BaseException("用户名或密码错误");
         }
         
@@ -253,6 +289,9 @@ public class SysUserServiceImpl implements SysUserService {
         
         // 生成JWT令牌
         String token = jwtUtil.generateToken(sysUser.getId(), sysUser.getUsername(), sysUser.getRole());
+        
+        // 将用户登录信息保存到Redis
+        redisLoginManager.saveLoginInfo(sysUser.getId(), sysUser.getUsername(), token);
         
         // 输出token到日志
         log.info("🔑 用户 [{}] 登录成功，生成的Token: {}", username, token);
